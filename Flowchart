@@ -1,0 +1,44 @@
+# Flowchart Proses Booting hingga Komputer Siap Digunakan
+
+Berikut adalah flowchart yang menggambarkan proses dari komputer dinyalakan hingga siap digunakan:
+
+1. **Komputer Dinyalakan**  
+   - Pengguna menekan tombol power.
+
+2. **Power-On Self Test (POST)**  
+   - Sistem melakukan pengecekan perangkat keras seperti RAM, CPU, dan perangkat I/O.
+   - Jika gagal, sistem menampilkan pesan error dan berhenti.
+
+3. **Load BIOS/UEFI**  
+   - BIOS/UEFI diinisialisasi untuk menyiapkan perangkat sebelum memuat sistem operasi.
+
+4. **Deteksi dan Inisialisasi Perangkat Keras**  
+   - Sistem mendeteksi perangkat penyimpanan, keyboard, mouse, dan lainnya.
+
+5. **Cari Bootloader di Penyimpanan**  
+   - BIOS/UEFI mencari bootloader di perangkat penyimpanan utama (HDD/SSD/USB).
+   - Jika tidak ditemukan, muncul pesan error "Boot Device Not Found".
+
+6. **Load Bootloader (GRUB, Windows Boot Manager, dll)**  
+   - Bootloader dimuat ke dalam memori untuk memulai sistem operasi.
+
+7. **Load Kernel OS**  
+   - Kernel sistem operasi dimuat untuk menangani proses inti.
+
+8. **Inisialisasi Driver Perangkat**  
+   - Sistem operasi memuat driver untuk mendukung perangkat keras.
+
+9. **Mounting Sistem File**  
+   - Sistem file diakses untuk membaca dan menulis data yang diperlukan.
+
+10. **Menjalankan Service & Daemon**  
+    - Layanan penting seperti jaringan dan keamanan dijalankan.
+
+11. **Menampilkan User Interface (GUI/CLI)**  
+    - Tampilan antarmuka pengguna disiapkan (desktop atau terminal CLI).
+
+12. **Pengguna Login**  
+    - Pengguna memasukkan kredensial untuk masuk ke sistem.
+
+13. **Komputer Siap Digunakan**  
+    - Sistem operasi siap menerima input dan menjalankan aplikasi.
