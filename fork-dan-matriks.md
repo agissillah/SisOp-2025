@@ -23,27 +23,24 @@ cd operatingsystem
 
 Program `fork01.c` membuat satu proses child dengan satu panggilan fork(). Parent dan child mencetak pesan masing-masing.
 
-```c
-#include <stdio.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-int main() {
-    pid_t pid = fork();
-    
-    printf("Fork returned: %d\n", pid);
-    
-    if (pid == 0) {
-        printf("I am the child process.\n");
-    } else if (pid > 0) {
-        printf("I am the parent process.\n");
-    } else {
-        printf("Fork failed!\n");
-    }
-    
-    return 0;
-}
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <rect width="400" height="200" fill="#f8f9fa" />
+  
+  <!-- Parent Process -->
+  <rect x="150" y="30" width="100" height="40" rx="5" fill="#a8d1ff" stroke="#0066cc" stroke-width="2" />
+  <text x="200" y="55" text-anchor="middle" font-family="Arial" font-size="14">Parent</text>
+  
+  <!-- Fork arrow -->
+  <line x1="200" y1="70" x2="200" y2="100" stroke="#333" stroke-width="2" />
+  
+  <!-- Child Process -->
+  <rect x="150" y="100" width="100" height="40" rx="5" fill="#d1ffeb" stroke="#006633" stroke-width="2" />
+  <text x="200" y="125" text-anchor="middle" font-family="Arial" font-size="14">Child</text>
+  
+  <!-- Labels -->
+  <text x="20" y="55" font-family="Arial" font-size="12">PID: parent</text>
+  <text x="20" y="125" font-family="Arial" font-size="12">PID: child</text>
+</svg>
 
 ![Process Tree for fork01.c](https://example.com/path/to/fork01_tree.png)
 
