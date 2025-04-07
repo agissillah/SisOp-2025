@@ -23,16 +23,9 @@ cd operatingsystem
 
 Program `fork01.c` membuat satu proses child dengan satu panggilan fork(). Parent dan child mencetak pesan masing-masing.
 
-classDiagram
-      Parent_Process --|> Child_Process
-      Parent_Process : PID =4900
-      Parent_Process : PPID = 4
-      Parent_Process: bash
-      class Child_Process{
-          PID=4901
-          PPID = 4900
-          fork01
-      }
+graph TD;
+    A[Parent] --> B[Child];
+
 
 
 #### fork02.c
