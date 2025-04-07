@@ -42,7 +42,6 @@ Program `fork01.c` membuat satu proses child dengan satu panggilan fork(). Paren
   <text x="20" y="125" font-family="Arial" font-size="12">PID: child</text>
 </svg>
 
-![Process Tree for fork01.c](https://example.com/path/to/fork01_tree.png)
 
 #### fork02.c
 
