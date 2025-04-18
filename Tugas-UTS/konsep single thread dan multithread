@@ -1,5 +1,13 @@
+# Contoh Diagram
+
+## Single Thread
+![Single Thread](https://github.com/user/repo/blob/main/diagrams/single.png?raw=true)
+
+## Multithread (Mermaid)
 ```mermaid
 graph LR
-   A[Thread 1] --> B[Tugas 1]
-   A --> C[Tugas 2]
+    A[Main Thread] --> B[Thread 1]
+    A --> C[Thread 2]
+    B --> D[Tugas A]
+    C --> E[Tugas B]
 ```
