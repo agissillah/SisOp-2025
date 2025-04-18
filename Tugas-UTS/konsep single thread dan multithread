@@ -1,13 +1,5 @@
-# Konsep Single Thread dan Multithread
-
-## Single Thread
-Single thread adalah model eksekusi di mana sebuah proses hanya memiliki satu alur kontrol (thread) yang menjalankan instruksi secara berurutan. Dalam model ini, hanya satu tugas yang dapat dijalankan pada satu waktu, dan tugas berikutnya harus menunggu hingga tugas saat ini selesai. Single thread umumnya digunakan dalam aplikasi sederhana yang tidak memerlukan paralelisme. Keuntungannya adalah kesederhanaan dalam pengelolaan sumber daya dan menghindari masalah sinkronisasi. Namun, kelemahannya adalah kurang efisien untuk tugas-tugas yang membutuhkan waktu lama atau memanfaatkan sistem multicore.
-
-![Single Thread](https://www.tutorialspoint.com/assets/questions/media/23166/single_threaded_process.jpg)  
-*Gambar 1: Proses single-threaded dengan satu alur kontrol.*
-
-## Multithread
-Multithread memungkinkan sebuah proses memiliki beberapa alur kontrol (thread) yang berjalan secara bersamaan. Setiap thread dapat menjalankan tugas berbeda secara paralel, sehingga meningkatkan responsivitas dan efisiensi, terutama pada sistem multicore. Thread-thread dalam proses yang sama berbagi sumber daya seperti memori dan file, tetapi memiliki stack dan register sendiri. Multithread cocok untuk aplikasi seperti server web atau pemrosesan gambar, di mana banyak tugas dapat dijalankan secara independen. Tantangannya meliputi manajemen sinkronisasi dan potensi race condition.
-
-![Multithread](https://www.tutorialspoint.com/assets/questions/media/23166/multi_threaded_process.jpg)  
-*Gambar 2: Proses multithreaded dengan beberapa alur kontrol yang berbagi sumber daya.*
+```mermaid
+graph LR
+   A[Thread 1] --> B[Tugas 1]
+   A --> C[Tugas 2]
+```
