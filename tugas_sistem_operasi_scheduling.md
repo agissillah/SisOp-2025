@@ -1,0 +1,151 @@
+# Tugas Sistem Operasi - CPU Scheduling
+
+## Jawaban 5.7
+
+### a. Hubungan Priority Scheduling dan SJF (Shortest Job First)
+
+Algoritma **SJF (Shortest Job First)** dapat dianggap sebagai bentuk khusus dari **priority scheduling**. Pada SJF, prioritas proses ditentukan oleh waktu eksekusinya — semakin kecil burst time, semakin tinggi prioritasnya. 
+
+**Kesimpulan:**
+- SJF sebenarnya dapat dijalankan menggunakan sistem prioritas
+- Burst time digunakan sebagai nilai prioritas
+- Proses dengan burst time terkecil mendapat prioritas tertinggi
+
+```
+Priority = 1 / Burst_Time
+atau
+Priority = Max_Value - Burst_Time
+```
+
+---
+
+### b. Hubungan Multilevel Feedback Queues dan FCFS (First-Come, First-Served)
+
+**Multilevel Feedback Queue** adalah kumpulan antrian yang dapat menggunakan berbagai algoritma penjadwalan, salah satunya adalah FCFS. 
+
+**Kondisi khusus:**
+- Jika semua antrian dalam multilevel feedback queue menggunakan FCFS
+- Tidak ada perpindahan antar antrian
+- Maka sistem tersebut pada dasarnya bekerja seperti FCFS tunggal
+
+**Karakteristik:**
+```
+Queue 1: FCFS
+Queue 2: FCFS  
+Queue 3: FCFS
+...
+Tanpa feedback/migration → Equivalent to Single FCFS
+```
+
+---
+
+### c. Hubungan Priority Scheduling dan FCFS
+
+FCFS dapat dilihat sebagai jenis **priority scheduling** dengan karakteristik khusus:
+
+**Kondisi:**
+- Semua proses memiliki prioritas yang sama
+- Urutan kedatangan (arrival time) digunakan sebagai penentu eksekusi
+- FCFS adalah kasus khusus dari priority scheduling
+
+**Formula:**
+```
+Priority = Arrival_Time (ascending order)
+atau
+Priority = Constant_Value (sama untuk semua proses)
+```
+
+---
+
+### d. Hubungan Round Robin dan SJF
+
+**Round Robin** dan **SJF** memiliki perbedaan fundamental:
+
+| Aspek | Round Robin | SJF |
+|-------|-------------|-----|
+| **Mekanisme** | Pembagian waktu secara merata (time quantum) | Memilih proses dengan burst time terpendek |
+| **Fokus** | Keadilan waktu CPU | Efisiensi waktu tunggu |
+| **Preemptive** | Ya (berdasarkan time quantum) | Bisa preemptive atau non-preemptive |
+| **Kompleksitas** | Sederhana | Memerlukan prediksi burst time |
+
+**Kesimpulan:**
+- Kedua algoritma tidak berhubungan secara langsung
+- Tidak saling mencakup atau menjadi subset satu sama lain
+- Memiliki tujuan dan pendekatan yang berbeda
+
+---
+
+## Jawaban 5.8
+
+### Analisis Algoritma CPU Scheduling yang Mengutamakan Proses dengan Penggunaan CPU Rendah
+
+#### Dampak terhadap Proses I/O-bound
+
+Jika algoritma penjadwalan CPU **lebih memilih proses yang dalam waktu terakhir hanya sedikit menggunakan CPU**, maka:
+
+**✅ Keuntungan untuk Proses I/O-bound:**
+- Proses I/O-bound akan **lebih sering dijalankan**
+- Proses I/O-bound biasanya hanya membutuhkan CPU sebentar
+- Setelah menggunakan CPU, mereka menunggu operasi I/O
+- Penggunaan CPU mereka memang rendah secara alami
+
+#### Dampak terhadap Proses CPU-bound
+
+**🔄 Kondisi Proses CPU-bound:**
+- Proses CPU-bound **tidak akan terus-menerus ditinggalkan**
+- Mereka mendapat prioritas lebih rendah dibanding proses I/O-bound
+- **Tetap akan diproses** ketika proses I/O-bound sedang menunggu operasi I/O
+
+#### Analisis Starvation
+
+**🛡️ Pencegahan Starvation:**
+- Proses CPU-bound **tetap mendapat kesempatan**
+- **Tidak mengalami starvation** (kelaparan proses)
+- Sistem tetap fair dalam jangka panjang
+
+#### Ilustrasi Timeline
+
+```
+Time: 0    5    10   15   20   25   30
+      |----|----|----|----|----|----|
+P1:   [CPU]     [I/O----] [CPU]
+P2:        [CPU]     [I/O-] [CPU]  
+P3:             [CPU-intensive--------]
+
+Legend:
+- P1, P2: I/O-bound processes
+- P3: CPU-bound process
+- P3 gets CPU time when P1, P2 are waiting for I/O
+```
+
+#### Kesimpulan
+
+Algoritma ini menghasilkan:
+
+1. **Responsivitas tinggi** untuk proses I/O-bound
+2. **Throughput optimal** karena CPU tidak idle
+3. **Fairness terjaga** dalam jangka panjang
+4. **Tidak ada starvation** untuk proses CPU-bound
+5. **Efisiensi sistem** yang baik secara keseluruhan
+
+**Formula Prioritas:**
+```
+Priority ∝ 1 / Recent_CPU_Usage
+```
+
+Dimana proses dengan `Recent_CPU_Usage` rendah mendapat prioritas tinggi.
+
+---
+
+## 📊 Ringkasan Hubungan Algoritma Scheduling
+
+| Algoritma 1 | Algoritma 2 | Hubungan | Status |
+|-------------|-------------|----------|---------|
+| Priority | SJF | SJF adalah kasus khusus Priority | ✅ Terhubung |
+| Multilevel Feedback | FCFS | MLFQ dapat menggunakan FCFS di setiap queue | ✅ Terhubung |
+| Priority | FCFS | FCFS adalah kasus khusus Priority | ✅ Terhubung |
+| Round Robin | SJF | Tidak ada hubungan langsung | ❌ Tidak terhubung |
+
+---
+
+**Catatan:** Pemahaman hubungan antar algoritma scheduling membantu dalam memilih algoritma yang tepat sesuai dengan karakteristik sistem dan kebutuhan aplikasi.
