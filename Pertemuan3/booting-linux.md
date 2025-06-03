@@ -1,29 +1,3 @@
-<div align="center">
-
-# LAPORAN RESMI SISTEM OPERASI
-### Proses Booting Linux - Analisis Mendalam
-
----
-
-![Linux Boot Process](https://github.com/user-attachments/assets/linux-boot-tux-penguin.png)
-
-#### Dosen Pengampu :
-**Dr. Ferry Astika Saputra ST, M.Sc.**
-
-#### Disusun Oleh : 
-**[Nama Mahasiswa]** D3 IT A **([NIM])**
-
-> PROGRAM STUDI D3 TEKNIK INFORMATIKA PSDKU LAMONGAN
-> DEPARTEMEN TEKNIK INFORMATIKA DAN KOMPUTER 
-> POLITEKNIK ELEKTRONIKA NEGERI SURABAYA 
-> 2025
-
----
-
-</div>
-
----
-
 # 🐧 Linux Boot Process Analysis
 
 **🎯 Tujuan :** 
