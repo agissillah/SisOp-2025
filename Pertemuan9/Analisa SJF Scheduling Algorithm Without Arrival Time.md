@@ -1,4 +1,4 @@
-# Analisis SJF Scheduling Algorithm dan Gantt Chart
+# SJF Scheduling ALgoritm Whithout Arrival Time
 
 ## Deskripsi Program
 
@@ -218,8 +218,3 @@ timeline
 ## Kompleksitas:
 - **Time Complexity**: O(n²) untuk sorting (bubble sort)
 - **Space Complexity**: O(n) untuk menyimpan array proses
-
-## Catatan Penting:
-1. Program ini mengasumsikan semua proses datang pada waktu yang sama (arrival time = 0)
-2. Response Time (RT) sama dengan Waiting Time (WT) karena tidak ada arrival time
-3. Algoritma ini optimal untuk minimasi average waiting time ketika arrival time sama
