@@ -290,9 +290,3 @@ timeline
 ## Kompleksitas:
 - **Time Complexity**: O(n²) untuk sorting dan selection
 - **Space Complexity**: O(n) untuk menyimpan array proses
-
-## Catatan Penting:
-1. Program ini mempertimbangkan arrival time dalam pemilihan proses
-2. Proses dipilih berdasarkan burst time terpendek dari yang sudah tiba
-3. Response Time (RT) sama dengan Waiting Time (WT) karena non-preemptive
-4. Idle time terjadi jika tidak ada proses yang tersedia pada suatu waktu
