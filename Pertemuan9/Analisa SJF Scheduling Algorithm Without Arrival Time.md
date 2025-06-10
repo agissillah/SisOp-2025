@@ -1,93 +1,225 @@
-# Analisis Algoritma SJF Tanpa Waktu Kedatangan (Non-Preemptive)
+# Analisis SJF Scheduling Algorithm dan Gantt Chart
 
-## Deskripsi Algoritma
+## Deskripsi Program
 
-Algoritma penjadwalan Shortest Job First (SJF) tanpa waktu kedatangan (non-preemptive) bekerja sebagai berikut:
+Program ini mengimplementasikan algoritma **Shortest Job First (SJF) Non-Preemptive** tanpa arrival time. Algoritma ini menjadwalkan proses berdasarkan burst time terpendek terlebih dahulu.
 
-1. Semua proses diasumsikan tiba pada waktu 0
-2. CPU menjadwalkan proses berdasarkan urutan waktu burst mereka (yang terpendek terlebih dahulu)
-3. Setelah proses mulai dieksekusi, proses tersebut akan berjalan hingga selesai (non-preemptive)
+## Source Code
 
-## Komponen Utama Kode
+```c
+#include<stdio.h>
+struct proc
+{
+    int no,bt,ct,tat,wt;
+};
 
-Implementasi yang diberikan:
+struct proc read(int i)
+{
+    struct proc p;
+    printf("\nProcess No: %d\n",i);
+    p.no=i;
+    printf("Enter Burst Time: ");
+    scanf("%d",&p.bt);
+    return p;
+}
 
-- Menggunakan struktur `proc` untuk menyimpan detail proses:
-  - `no`: Nomor proses
-  - `bt`: Burst time (waktu eksekusi)
-  - `ct`: Completion time (waktu penyelesaian)
-  - `tat`: Turnaround time (waktu turnaround)
-  - `wt`: Waiting time (waktu tunggu)
-- Mengurutkan proses berdasarkan waktu burst menggunakan bubble sort
-- Menghitung waktu penyelesaian, waktu turnaround, dan waktu tunggu untuk setiap proses
-- Menghitung dan menampilkan rata-rata waktu turnaround dan waktu tunggu
+int main()
+{
+    struct proc p[10],tmp;
+    float avgtat=0,avgwt=0;
+    int n,ct=0;
+    printf("<--SJF Scheduling Algorithm Without Arrival Time (Non-Preemptive)-->\n");
+    printf("Enter Number of Processes: ");
+    scanf("%d",&n);
+    
+    // Input burst time untuk setiap proses
+    for(int i=0;i<n;i++)
+        p[i]=read(i+1);
+    
+    // Sorting berdasarkan burst time (SJF)
+    for(int i=0;i<n-1;i++)
+        for(int j=0;j<n-i-1;j++)    
+            if(p[j].bt>p[j+1].bt)
+            {
+                tmp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=tmp;
+            }
+    
+    // Kalkulasi dan output
+    printf("\nProcessNo\tBT\tCT\tTAT\tWT\tRT\n");
+    for(int i=0;i<n;i++)
+    {
+        ct+=p[i].bt;
+        p[i].ct=p[i].tat=ct;
+        avgtat+=p[i].tat;
+        p[i].wt=p[i].tat-p[i].bt;
+        avgwt+=p[i].wt;
+        printf("P%d\t\t%d\t%d\t%d\t%d\t%d\n",p[i].no,p[i].bt,p[i].ct,p[i].tat,p[i].wt,p[i].wt);
+    }
+    avgtat/=n,avgwt/=n;
+    printf("\nAverage TurnAroundTime=%f\nAverage WaitingTime=%f",avgtat,avgwt);
+    return 0;
+}
+```
 
-## Alur Eksekusi
-
-1. Pengguna memasukkan jumlah proses dan waktu burst mereka
-2. Proses diurutkan dalam urutan naik berdasarkan waktu burst
-3. Setiap proses dieksekusi satu per satu dalam urutan yang telah diurutkan
-4. Untuk setiap proses, algoritma menghitung:
-   - Waktu penyelesaian (CT) = Jumlah waktu burst hingga proses saat ini
-   - Waktu turnaround (TAT) = CT (karena waktu kedatangan = 0)
-   - Waktu tunggu (WT) = TAT - BT
-   - Waktu respons (RT) = WT (dalam konteks ini, karena waktu kedatangan = 0)
-
-## Pseudocode
+## Output Program
 
 ```
-1. Input jumlah proses n
-2. Input burst time untuk setiap proses
-3. Urutkan proses berdasarkan burst time (ascending)
-4. Inisialisasi CT = 0
-5. Untuk setiap proses i dari 1 hingga n:
-   a. CT = CT + BT[i]
-   b. TAT[i] = CT
-   c. WT[i] = TAT[i] - BT[i]
-6. Hitung rata-rata TAT dan WT
-7. Tampilkan hasil
+<--SJF Scheduling Algorithm Without Arrival Time (Non-Preemptive)-->
+Enter Number of Processes: 4
+
+Process No: 1
+Enter Burst Time: 8
+
+Process No: 2
+Enter Burst Time: 4
+
+Process No: 3
+Enter Burst Time: 2
+
+Process No: 4
+Enter Burst Time: 6
+
+ProcessNo	BT	CT	TAT	WT	RT
+P3		2	2	2	0	0
+P2		4	6	6	2	2
+P4		6	12	12	6	6
+P1		8	20	20	12	12
+
+Average TurnAroundTime=10.000000
+Average WaitingTime=5.000000
 ```
 
-## Kelebihan SJF
+## Struktur Program
 
-- Meminimalkan rata-rata waktu tunggu dibandingkan dengan algoritma FCFS (First-Come-First-Served)
-- Optimal untuk meminimalkan rata-rata waktu tunggu ketika semua proses tiba secara bersamaan
-- Sederhana untuk diimplementasikan ketika waktu kedatangan tidak dipertimbangkan
-- Menghasilkan rata-rata waktu tunggu yang lebih pendek dibanding algoritma lain
+### 1. Struktur Data
+```c
+struct proc {
+    int no;    // Nomor proses
+    int bt;    // Burst Time
+    int ct;    // Completion Time
+    int tat;   // Turnaround Time
+    int wt;    // Waiting Time
+};
+```
 
-## Keterbatasan Implementasi
+### 2. Fungsi Utama
+- **`read(int i)`**: Membaca input burst time untuk setiap proses
+- **Sorting**: Mengurutkan proses berdasarkan burst time menggunakan bubble sort
+- **Kalkulasi**: Menghitung CT, TAT, dan WT untuk setiap proses
 
-1. Kode mengasumsikan semua proses tiba pada waktu 0 (waktu kedatangan tidak dipertimbangkan)
-2. Bersifat non-preemptive, artinya setelah proses dimulai, proses akan berjalan hingga selesai
-3. Implementasi bubble sort untuk mengurutkan proses tidak efisien untuk dataset yang besar
-4. Tidak memperhitungkan dinamika proses yang tiba pada waktu yang berbeda
+## Contoh Eksekusi
 
-## Implikasi Kinerja
+### Input Sample:
+- **Jumlah Proses**: 4
+- **Proses 1**: Burst Time = 8
+- **Proses 2**: Burst Time = 4  
+- **Proses 3**: Burst Time = 2
+- **Proses 4**: Burst Time = 6
 
-SJF secara teoritis optimal untuk meminimalkan rata-rata waktu tunggu, tetapi memiliki keterbatasan praktis:
+### Setelah Sorting (berdasarkan burst time):
+| Proses | Burst Time | Urutan Eksekusi |
+|--------|------------|-----------------|
+| P3     | 2          | 1               |
+| P2     | 4          | 2               |
+| P4     | 6          | 3               |
+| P1     | 8          | 4               |
 
-- Membutuhkan pengetahuan waktu burst di awal, yang biasanya tidak mungkin dalam sistem nyata
-- Dapat menyebabkan kelaparan (starvation) pada proses yang lebih panjang jika proses yang lebih pendek terus berdatangan
-- Dalam pengimplementasian yang lebih realistis, prediksi waktu burst harus dilakukan
+### Perhitungan:
 
-## Contoh Kasus
+#### Proses P3 (BT=2):
+- **CT** = 0 + 2 = 2
+- **TAT** = CT - AT = 2 - 0 = 2
+- **WT** = TAT - BT = 2 - 2 = 0
 
-Untuk contoh 3 proses dengan burst time:
-- P1: 6 unit
-- P2: 3 unit
-- P3: 8 unit
+#### Proses P2 (BT=4):
+- **CT** = 2 + 4 = 6
+- **TAT** = CT - AT = 6 - 0 = 6
+- **WT** = TAT - BT = 6 - 4 = 2
 
-Setelah pengurutan: P2, P1, P3
+#### Proses P4 (BT=6):
+- **CT** = 6 + 6 = 12
+- **TAT** = CT - AT = 12 - 0 = 12
+- **WT** = TAT - BT = 12 - 6 = 6
 
-| Proses | BT | CT | TAT | WT | RT |
-|--------|----|----|-----|----|----|
-| P2     | 3  | 3  | 3   | 0  | 0  |
-| P1     | 6  | 9  | 9   | 3  | 3  |
-| P3     | 8  | 17 | 17  | 9  | 9  |
+#### Proses P1 (BT=8):
+- **CT** = 12 + 8 = 20
+- **TAT** = CT - AT = 20 - 0 = 20
+- **WT** = TAT - BT = 20 - 8 = 12
 
-Rata-rata TAT = (3 + 9 + 17) / 3 = 9.67
-Rata-rata WT = (0 + 3 + 9) / 3 = 4.00
+### Tabel Hasil:
+| ProcessNo | BT | CT | TAT | WT | RT |
+|-----------|----|----|-----|----|----|
+| P3        | 2  | 2  | 2   | 0  | 0  |
+| P2        | 4  | 6  | 6   | 2  | 2  |
+| P4        | 6  | 12 | 12  | 6  | 6  |
+| P1        | 8  | 20 | 20  | 12 | 12 |
 
-## Kesimpulan
+### Rata-rata:
+- **Average Turnaround Time** = (2 + 6 + 12 + 20) / 4 = **10.0**
+- **Average Waiting Time** = (0 + 2 + 6 + 12) / 4 = **5.0**
 
-Algoritma SJF tanpa waktu kedatangan merupakan implementasi sederhana yang efektif untuk meminimalkan waktu tunggu rata-rata dan cocok untuk lingkungan di mana semua proses tersedia secara bersamaan pada awal eksekusi. Namun, dalam kasus yang lebih realistis, versi preemptive (SRTF - Shortest Remaining Time First) dan pertimbangan waktu kedatangan yang berbeda akan memberikan hasil yang lebih baik dalam lingkungan multiprogramming yang dinamis.
+## Gantt Chart (Mermaid)
+
+```mermaid
+gantt
+    title SJF Scheduling Algorithm - Process Execution Timeline
+    dateFormat X
+    axisFormat %s
+    
+    section Process Execution
+    P3 (BT=2)    :active, p3, 0, 2
+    P2 (BT=4)    :active, p2, 2, 6
+    P4 (BT=6)    :active, p4, 6, 12
+    P1 (BT=8)    :active, p1, 12, 20
+```
+
+### Gantt Chart Timeline:
+```mermaid
+timeline
+    title SJF Process Execution Order
+    
+    0-2   : P3 Executing
+          : Burst Time = 2
+          : Waiting Time = 0
+    
+    2-6   : P2 Executing  
+          : Burst Time = 4
+          : Waiting Time = 2
+    
+    6-12  : P4 Executing
+          : Burst Time = 6
+          : Waiting Time = 6
+          
+    12-20 : P1 Executing
+          : Burst Time = 8
+          : Waiting Time = 12
+```
+
+## Timeline Eksekusi:
+- **0-2**: Proses P3 dieksekusi (Burst Time = 2)
+- **2-6**: Proses P2 dieksekusi (Burst Time = 4)  
+- **6-12**: Proses P4 dieksekusi (Burst Time = 6)
+- **12-20**: Proses P1 dieksekusi (Burst Time = 8)
+
+## Karakteristik SJF Non-Preemptive:
+
+### Keunggulan:
+- **Optimal** untuk meminimalkan average waiting time
+- **Sederhana** dalam implementasi
+- **Efisien** untuk batch systems
+
+### Kelemahan:
+- **Starvation**: Proses dengan burst time panjang bisa menunggu sangat lama
+- **Sulit memprediksi** burst time yang akurat
+- **Tidak responsif** untuk interactive systems
+
+## Kompleksitas:
+- **Time Complexity**: O(n²) untuk sorting (bubble sort)
+- **Space Complexity**: O(n) untuk menyimpan array proses
+
+## Catatan Penting:
+1. Program ini mengasumsikan semua proses datang pada waktu yang sama (arrival time = 0)
+2. Response Time (RT) sama dengan Waiting Time (WT) karena tidak ada arrival time
+3. Algoritma ini optimal untuk minimasi average waiting time ketika arrival time sama
