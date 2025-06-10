@@ -1,179 +1,302 @@
 # Analisis Algoritma SRTF (Shortest Remaining Time First)
 
-## Deskripsi Algoritma
+## Deskripsi Program
 
-Shortest Remaining Time First (SRTF) adalah versi preemptive dari algoritma penjadwalan SJF (Shortest Job First). Algoritma ini bekerja sebagai berikut:
+Program ini mengimplementasikan algoritma **Shortest Remaining Time First (SRTF)** yang merupakan versi preemptive dari SJF. Algoritma ini memilih proses dengan remaining time (sisa waktu) terpendek pada setiap unit waktu dan dapat melakukan preemption.
 
-1. Pada setiap titik waktu, CPU mengeksekusi proses dengan sisa waktu eksekusi terpendek
-2. Jika proses baru tiba dan memiliki waktu burst lebih pendek daripada sisa waktu proses yang sedang dieksekusi, proses yang sedang berjalan akan diinterupsi (preempted)
-3. Proses yang diinterupsi akan dilanjutkan kembali ketika tidak ada proses lain dengan sisa waktu eksekusi yang lebih pendek
+## Source Code
 
-SRTF merupakan algoritma penjadwalan yang optimal dalam hal meminimalkan waktu tunggu rata-rata untuk semua proses.
+```c
+#include<stdio.h>
+#define MAX 9999
 
-## Komponen Utama Kode
+struct proc
+{
+    int no,at,bt,rt,ct,tat,wt;
+};
 
-Implementasi yang diberikan:
+struct proc read(int i)
+{
+    struct proc p;
+    printf("\nProcess No: %d\n",i);
+    p.no=i;
+    printf("Enter Arrival Time: ");
+    scanf("%d",&p.at);
+    printf("Enter Burst Time: ");
+    scanf("%d",&p.bt);
+    p.rt=p.bt;  // Initialize remaining time dengan burst time
+    return p;
+}
 
-- Menggunakan struktur `proc` untuk menyimpan detail proses:
-  - `no`: Nomor proses
-  - `at`: Arrival time (waktu kedatangan)
-  - `bt`: Burst time (waktu eksekusi total)
-  - `rt`: Remaining time (sisa waktu eksekusi)
-  - `ct`: Completion time (waktu penyelesaian)
-  - `tat`: Turnaround time (waktu turnaround)
-  - `wt`: Waiting time (waktu tunggu)
-- Mengurutkan proses berdasarkan waktu kedatangan menggunakan bubble sort
-- Menggunakan konstanta `MAX` (9999) sebagai nilai awal untuk perbandingan
-- Menjalankan simulasi dengan granularitas waktu 1 unit
-- Menghitung dan menampilkan waktu penyelesaian, waktu turnaround, dan waktu tunggu
-
-## Alur Eksekusi Algoritma
-
-1. Pengguna memasukkan jumlah proses, waktu kedatangan, dan waktu burst
-2. Proses diurutkan berdasarkan waktu kedatangan
-3. Simulasi dijalankan dari waktu t=0 dengan langkah-langkah:
-   - Untuk setiap unit waktu, identifikasi proses dengan sisa waktu eksekusi terpendek di antara proses-proses yang telah tiba
-   - Kurangi sisa waktu (rt) proses tersebut sebanyak 1 unit
-   - Jika sisa waktu mencapai 0, proses selesai:
-     - Hitung completion time (ct) = waktu saat ini + 1
-     - Hitung turnaround time (tat) = ct - at
-     - Hitung waiting time (wt) = tat - bt
-   - Lanjutkan sampai semua proses selesai
-
-## Contoh Kasus
-
-Misalkan terdapat 4 proses dengan detail berikut:
-- P1: AT=0, BT=8
-- P2: AT=1, BT=4
-- P3: AT=2, BT=9
-- P4: AT=3, BT=5
-
-Berikut adalah simulasi langkah demi langkah:
-
-### Simulasi SRTF
-
-| Waktu | Proses yang Dijalankan | Proses yang Tersedia | Sisa Waktu Setelah Eksekusi |
-|-------|------------------------|----------------------|------------------------------|
-| 0     | P1                     | P1                   | P1=7, P2=4, P3=9, P4=5      |
-| 1     | P2                     | P1, P2              | P1=7, P2=3, P3=9, P4=5      |
-| 2     | P2                     | P1, P2, P3          | P1=7, P2=2, P3=9, P4=5      |
-| 3     | P2                     | P1, P2, P3, P4      | P1=7, P2=1, P3=9, P4=5      |
-| 4     | P2                     | P1, P2, P3, P4      | P1=7, P2=0, P3=9, P4=5      |
-| 5     | P4                     | P1, P3, P4          | P1=7, P2=0, P3=9, P4=4      |
-| 6     | P4                     | P1, P3, P4          | P1=7, P2=0, P3=9, P4=3      |
-| 7     | P4                     | P1, P3, P4          | P1=7, P2=0, P3=9, P4=2      |
-| 8     | P4                     | P1, P3, P4          | P1=7, P2=0, P3=9, P4=1      |
-| 9     | P4                     | P1, P3, P4          | P1=7, P2=0, P3=9, P4=0      |
-| 10    | P1                     | P1, P3              | P1=6, P2=0, P3=9, P4=0      |
-| 11    | P1                     | P1, P3              | P1=5, P2=0, P3=9, P4=0      |
-| 12    | P1                     | P1, P3              | P1=4, P2=0, P3=9, P4=0      |
-| 13    | P1                     | P1, P3              | P1=3, P2=0, P3=9, P4=0      |
-| 14    | P1                     | P1, P3              | P1=2, P2=0, P3=9, P4=0      |
-| 15    | P1                     | P1, P3              | P1=1, P2=0, P3=9, P4=0      |
-| 16    | P1                     | P1, P3              | P1=0, P2=0, P3=9, P4=0      |
-| 17    | P3                     | P3                  | P1=0, P2=0, P3=8, P4=0      |
-| 18    | P3                     | P3                  | P1=0, P2=0, P3=7, P4=0      |
-| ...   | ...                    | ...                 | ...                         |
-| 25    | P3                     | P3                  | P1=0, P2=0, P3=0, P4=0      |
-
-### Hasil Akhir
-
-| Proses | AT | BT | CT | TAT | WT |
-|--------|----|----|----|----|-----|
-| P1     | 0  | 8  | 17 | 17 | 9  |
-| P2     | 1  | 4  | 5  | 4  | 0  |
-| P3     | 2  | 9  | 26 | 24 | 15 |
-| P4     | 3  | 5  | 10 | 7  | 2  |
-
-Rata-rata TAT = (17 + 4 + 24 + 7) / 4 = 13
-Rata-rata WT = (9 + 0 + 15 + 2) / 4 = 6.5
-
-## Detail Algoritma SRTF
-
-### Analisis Langkah-Langkah Eksekusi
-
-Algoritma SRTF bekerja dengan simulasi berbasis waktu:
-
-1. Mulai dari t=0
-2. Pada setiap unit waktu:
-   - Identifikasi semua proses yang telah tiba (AT ≤ t)
-   - Pilih proses dengan remaining time (RT) terkecil
-   - Kurangi RT proses tersebut sebanyak 1 unit
-   - Jika RT mencapai 0, proses selesai dan hitung metrik kinerja
-3. Jika proses baru tiba dan memiliki RT lebih kecil daripada proses yang sedang dieksekusi, proses baru tersebut akan mengambil alih CPU (preemption)
-
-### Implementasi Kode Detail
-
-```
-1. Input jumlah proses n
-2. Input arrival time dan burst time untuk setiap proses
-3. Set remaining time = burst time untuk setiap proses
-4. Urutkan proses berdasarkan arrival time (ascending)
-5. Inisialisasi dummy process dengan RT = MAX (9999)
-6. Untuk time=0; sampai semua proses selesai; time++:
-   a. s = indeks dummy process (9)
-   b. Untuk setiap proses i:
-      Jika (AT[i] ≤ time) DAN (RT[i] < RT[s]) DAN (RT[i] > 0)
-         s = i
-   c. RT[s]--
-   d. Jika RT[s] == 0:
-      - Proses s selesai
-      - Increment jumlah proses yang selesai
-      - CT[s] = time + 1
-      - TAT[s] = CT[s] - AT[s]
-      - WT[s] = TAT[s] - BT[s]
-7. Hitung rata-rata TAT dan WT
-8. Tampilkan hasil
+int main()
+{
+    struct proc p[10],temp;
+    float avgtat=0,avgwt=0;
+    int n,s,remain=0,time;
+    
+    printf("<--SRTF Scheduling Algorithm (Preemptive)-->\n");
+    printf("Enter Number of Processes: ");
+    scanf("%d",&n);
+    
+    // Input arrival time dan burst time untuk setiap proses
+    for(int i=0;i<n;i++)
+        p[i]=read(i+1);
+    
+    // Sorting berdasarkan arrival time
+    for(int i=0;i<n-1;i++)
+        for(int j=0;j<n-i-1;j++)    
+            if(p[j].at>p[j+1].at)
+            {
+                temp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=temp;
+            }
+    
+    printf("\nProcess\t\tAT\tBT\tCT\tTAT\tWT\n");
+    p[9].rt=MAX;  // Sentinel value untuk perbandingan
+    
+    // Main scheduling loop - berjalan setiap unit waktu
+    for(time=0;remain!=n;time++)
+    {
+        s=9;  // Index default (sentinel)
+        
+        // Cari proses dengan remaining time terpendek yang sudah tiba
+        for(int i=0;i<n;i++)
+            if(p[i].at<=time && p[i].rt<p[s].rt && p[i].rt>0)
+                s=i;
+        
+        // Eksekusi proses terpilih selama 1 unit waktu
+        p[s].rt--;
+        
+        // Jika proses selesai
+        if(p[s].rt==0)
+        {
+            remain++;
+            p[s].ct=time+1;
+            p[s].tat=p[s].ct-p[s].at;
+            avgtat+=p[s].tat;
+            p[s].wt=p[s].tat-p[s].bt;
+            avgwt+=p[s].wt;
+            printf("P%d\t\t%d\t%d\t%d\t%d\t%d\n",p[s].no,p[s].at,p[s].bt,p[s].ct,p[s].tat,p[s].wt);
+        }
+    }
+    
+    avgtat/=n,avgwt/=n;
+    printf("\nAverage TurnAroundTime=%f\nAverage WaitingTime=%f",avgtat,avgwt);
+    return 0;
+}
 ```
 
-## Kelebihan Algoritma SRTF
+## Output Program
 
-- Optimal untuk meminimalkan waktu tunggu rata-rata
-- Responsif terhadap proses dengan kebutuhan CPU pendek
-- Memprioritaskan proses-proses kecil, sehingga meningkatkan throughput
-- Dapat beradaptasi dengan kedatangan proses baru yang lebih pendek
-- Cocok untuk sistem time-sharing di mana waktu respons cepat adalah prioritas
+```
+<--SRTF Scheduling Algorithm (Preemptive)-->
+Enter Number of Processes: 4
 
-## Keterbatasan Implementasi
+Process No: 1
+Enter Arrival Time: 0
+Enter Burst Time: 8
 
-1. Membutuhkan pengetahuan tentang waktu burst sebelumnya, yang sulit dalam sistem nyata
-2. Overhead komputasi tinggi karena keputusan preemptive pada setiap unit waktu
-3. Implementasi bubble sort untuk mengurutkan proses tidak efisien untuk dataset yang besar
-4. Dapat menyebabkan kelaparan (starvation) untuk proses dengan waktu burst panjang
-5. Response time (RT) tidak dihitung dalam implementasi ini (seharusnya waktu dari kedatangan hingga pertama kali dieksekusi)
+Process No: 2
+Enter Arrival Time: 1
+Enter Burst Time: 4
 
-## Perbandingan dengan Algoritma Lain
+Process No: 3
+Enter Arrival Time: 2
+Enter Burst Time: 2
 
-| Aspek | FCFS | SJF | SRTF |
-|-------|------|-----|------|
-| Jenis | Non-preemptive | Non-preemptive | Preemptive |
-| Waktu tunggu rata-rata | Tinggi | Sedang | Terendah |
-| Kompleksitas | Rendah | Sedang | Tinggi |
-| Risiko starvation | Tidak | Ya | Ya |
-| Overhead | Rendah | Sedang | Tinggi |
-| Waktu respons | Buruk | Sedang | Baik |
-| Optimal | Tidak | Tidak | Ya (untuk waktu tunggu) |
+Process No: 4
+Enter Arrival Time: 3
+Enter Burst Time: 1
 
-## Implikasi Kinerja
+Process		AT	BT	CT	TAT	WT
+P4		3	1	4	1	0
+P3		2	2	6	4	2
+P2		1	4	10	9	5
+P1		0	8	18	18	10
 
-SRTF memiliki karakteristik kinerja:
+Average TurnAroundTime=8.000000
+Average WaitingTime=4.250000
+```
 
-- Menghasilkan waktu tunggu rata-rata minimum di antara semua algoritma penjadwalan
-- Mengoptimalkan waktu respons untuk proses-proses pendek
-- Proses-proses panjang mungkin mengalami kelaparan jika proses-proses pendek terus berdatangan
-- Membutuhkan overhead karena context switching yang sering terjadi
-- Sulit diimplementasikan dalam sistem nyata karena membutuhkan prediksi waktu burst yang akurat
+## Struktur Program
 
-## Implementasi Praktis
+### 1. Struktur Data
+```c
+struct proc {
+    int no;    // Nomor proses
+    int at;    // Arrival Time
+    int bt;    // Burst Time (original)
+    int rt;    // Remaining Time (sisa waktu)
+    int ct;    // Completion Time
+    int tat;   // Turnaround Time
+    int wt;    // Waiting Time
+};
+```
 
-Dalam sistem operasi nyata:
-- Estimasi waktu burst menggunakan metode prediksi seperti exponential averaging
-- Penggunaan quantum waktu untuk membatasi waktu eksekusi
-- Kombinasi dengan algoritma prioritas untuk menghindari starvation
-- Implementasi struktur data yang efisien untuk pemilihan proses
+### 2. Algoritma SRTF
+1. **Initialization**: Set remaining time = burst time untuk setiap proses
+2. **Time Loop**: Untuk setiap unit waktu (0, 1, 2, ...)
+3. **Selection**: Pilih proses dengan remaining time terpendek yang sudah tiba
+4. **Execution**: Eksekusi proses selama 1 unit waktu (rt--)
+5. **Completion Check**: Jika rt = 0, hitung CT, TAT, WT
+6. **Preemption**: Proses dapat di-preempt kapan saja
 
-## Kesimpulan
+## Contoh Eksekusi
 
-Shortest Remaining Time First (SRTF) adalah algoritma penjadwalan preemptive yang optimal untuk meminimalkan waktu tunggu rata-rata. Algoritma ini sangat responsif terhadap proses-proses dengan kebutuhan CPU rendah, yang membuatnya cocok untuk sistem interaktif. Namun, kompleksitasnya yang tinggi dan kebutuhan untuk memprediksi waktu burst menjadikannya sulit untuk diimplementasikan dalam sistem nyata. Selain itu, kelaparan proses-proses panjang menjadi perhatian utama yang perlu diatasi dengan mekanisme tambahan seperti aging atau mengombinasikannya dengan algoritma penjadwalan lain.
+### Input Sample:
+| Proses | Arrival Time | Burst Time | Remaining Time |
+|--------|--------------|------------|----------------|
+| P1     | 0            | 8          | 8              |
+| P2     | 1            | 4          | 4              |
+| P3     | 2            | 2          | 2              |
+| P4     | 3            | 1          | 1              |
 
-Implementasi yang dianalisis menunjukkan simulasi SRTF yang efektif, tetapi dalam pengembangan sistem operasi modern, pendekatan hibrida dan mekanisme estimasi yang lebih canggih biasanya digunakan untuk mencapai keseimbangan antara efisiensi, keadilan, dan kepraktisan.
+### Trace Eksekusi Langkah demi Langkah:
+
+| Time | Available Processes | Selected | Remaining Times | Action |
+|------|-------------------|----------|-----------------|---------|
+| 0    | P1(rt=8)          | P1       | P1=7           | Execute P1 |
+| 1    | P1(rt=7), P2(rt=4)| P2       | P1=7, P2=3     | Preempt P1, Execute P2 |
+| 2    | P1(rt=7), P2(rt=3), P3(rt=2) | P3 | P1=7, P2=3, P3=1 | Preempt P2, Execute P3 |
+| 3    | P1(rt=7), P2(rt=3), P3(rt=1), P4(rt=1) | P4 | P1=7, P2=3, P3=1, P4=0 | Preempt P3, Execute P4 |
+| 4    | P1(rt=7), P2(rt=3), P3(rt=1) | P3 | P1=7, P2=3, P3=0 | P4 selesai, Execute P3 |
+| 5    | P1(rt=7), P2(rt=3) | P2       | P1=7, P2=2     | P3 selesai, Execute P2 |
+| 6    | P1(rt=7), P2(rt=2) | P2       | P1=7, P2=1     | Execute P2 |
+| 7    | P1(rt=7), P2(rt=1) | P2       | P1=7, P2=0     | Execute P2 |
+| 8    | P1(rt=7)          | P1       | P1=6           | P2 selesai, Execute P1 |
+| 9    | P1(rt=6)          | P1       | P1=5           | Execute P1 |
+| 10   | P1(rt=5)          | P1       | P1=4           | Execute P1 |
+| 11   | P1(rt=4)          | P1       | P1=3           | Execute P1 |
+| 12   | P1(rt=3)          | P1       | P1=2           | Execute P1 |
+| 13   | P1(rt=2)          | P1       | P1=1           | Execute P1 |
+| 14   | P1(rt=1)          | P1       | P1=0           | Execute P1 |
+| 15   | -                 | -        | -              | P1 selesai, All done |
+
+### Perhitungan Detail:
+
+#### Proses P4 (selesai di waktu 4):
+- **Completion Time (CT)** = 4
+- **Turnaround Time (TAT)** = 4 - 3 = 1
+- **Waiting Time (WT)** = 1 - 1 = 0
+
+#### Proses P3 (selesai di waktu 6):
+- **Completion Time (CT)** = 6
+- **Turnaround Time (TAT)** = 6 - 2 = 4
+- **Waiting Time (WT)** = 4 - 2 = 2
+
+#### Proses P2 (selesai di waktu 10):
+- **Completion Time (CT)** = 10
+- **Turnaround Time (TAT)** = 10 - 1 = 9
+- **Waiting Time (WT)** = 9 - 4 = 5
+
+#### Proses P1 (selesai di waktu 18):
+- **Completion Time (CT)** = 18
+- **Turnaround Time (TAT)** = 18 - 0 = 18
+- **Waiting Time (WT)** = 18 - 8 = 10
+
+### Tabel Hasil:
+| Process | AT | BT | CT | TAT | WT |
+|---------|----|----|----|----|-----|
+| P4      | 3  | 1  | 4  | 1  | 0   |
+| P3      | 2  | 2  | 6  | 4  | 2   |
+| P2      | 1  | 4  | 10 | 9  | 5   |
+| P1      | 0  | 8  | 18 | 18 | 10  |
+
+### Rata-rata:
+- **Average Turnaround Time** = (1 + 4 + 9 + 18) / 4 = **8.0**
+- **Average Waiting Time** = (0 + 2 + 5 + 10) / 4 = **4.25**
+
+## Gantt Chart (Mermaid)
+
+```mermaid
+gantt
+    title SRTF Scheduling Algorithm - Process Execution Timeline (Preemptive)
+    dateFormat X
+    axisFormat %s
+    
+    section Process Execution
+    P1 (0-1)     :active, p1a, 0, 1
+    P2 (1-2)     :active, p2a, 1, 2
+    P3 (2-3)     :active, p3a, 2, 3
+    P4 (3-4)     :active, p4, 3, 4
+    P3 (4-6)     :active, p3b, 4, 6
+    P2 (6-10)    :active, p2b, 6, 10
+    P1 (10-18)   :active, p1b, 10, 18
+```
+
+### Gantt Chart Timeline Detail:
+```mermaid
+timeline
+    title SRTF Process Execution dengan Preemption
+    
+    0-1   : P1 Executing
+          : RT=8→7, Preempted by P2
+    
+    1-2   : P2 Executing  
+          : RT=4→3, Preempted by P3
+    
+    2-3   : P3 Executing
+          : RT=2→1, Preempted by P4
+          
+    3-4   : P4 Executing
+          : RT=1→0, COMPLETED
+          
+    4-6   : P3 Resumes
+          : RT=1→0, COMPLETED
+          
+    6-10  : P2 Resumes
+          : RT=3→0, COMPLETED
+          
+    10-18 : P1 Resumes
+          : RT=7→0, COMPLETED
+```
+
+## Timeline Eksekusi dengan Preemption:
+- **0-1**: P1 dieksekusi (RT: 8→7)
+- **1-2**: P2 preempt P1, dieksekusi (RT: 4→3)
+- **2-3**: P3 preempt P2, dieksekusi (RT: 2→1)
+- **3-4**: P4 preempt P3, dieksekusi sampai selesai (RT: 1→0) ✓
+- **4-6**: P3 resume, dieksekusi sampai selesai (RT: 1→0) ✓
+- **6-10**: P2 resume, dieksekusi sampai selesai (RT: 3→0) ✓
+- **10-18**: P1 resume, dieksekusi sampai selesai (RT: 7→0) ✓
+
+## Perbandingan dengan Algoritma Lain:
+
+### SRTF vs SJF (Non-Preemptive):
+| Metric | SRTF | SJF dengan AT |
+|--------|------|---------------|
+| Average TAT | 8.0 | 11.5 |
+| Average WT | 4.25 | 6.5 |
+| Preemption | Ya | Tidak |
+| Context Switching | Tinggi | Rendah |
+
+### Keunggulan SRTF:
+- **Optimal** untuk meminimalkan average waiting time
+- **Responsif** terhadap proses pendek yang datang
+- **Mengurangi starvation** dibanding FCFS
+
+### Kelemahan SRTF:
+- **Context switching overhead** yang tinggi
+- **Kompleksitas implementasi** lebih tinggi
+- **Starvation** masih mungkin terjadi untuk proses panjang
+- **Sulit memprediksi** remaining time yang akurat
+
+## Karakteristik SRTF:
+
+### Preemption Policy:
+- Proses bisa di-preempt setiap saat
+- Keputusan scheduling dibuat setiap unit waktu
+- Proses dengan remaining time terpendek diprioritaskan
+
+### Kompleksitas:
+- **Time Complexity**: O(n × total_time) untuk simulasi
+- **Space Complexity**: O(n) untuk menyimpan proses
+- **Context Switching**: O(preemption_count)
+
+## Catatan Penting:
+1. SRTF adalah versi preemptive dari SJF
+2. Memberikan average waiting time optimal secara teoritis
+3. Dalam praktik, overhead context switching perlu dipertimbangkan
+4. Cocok untuk sistem yang membutuhkan responsivitas tinggi
+5. Remaining time harus diprediksi atau diestimasi dalam sistem nyata
